@@ -57,10 +57,12 @@ const authMiddleware = (req, res, next) => {
 };
 
 
-// --- API Routes ---
+// --- API Routers ---
 
-// 1. Authentication Routes
-app.post('/api/auth/register', async (req, res) => {
+// 1. Auth Router
+const authRouter = express.Router();
+
+authRouter.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
         if (!email || !password) {
@@ -90,7 +92,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
-app.post('/api/auth/login', async (req, res) => {
+authRouter.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
@@ -115,7 +117,7 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-app.get('/api/auth/verify', authMiddleware, async (req, res) => {
+authRouter.get('/verify', authMiddleware, async (req, res) => {
     try {
         // The token is valid if authMiddleware passes
         // We find the user to ensure they still exist in the DB
@@ -129,9 +131,10 @@ app.get('/api/auth/verify', authMiddleware, async (req, res) => {
     }
 });
 
+// 2. Resume Router
+const resumeRouter = express.Router();
 
-// 2. Resume Routes (Protected)
-app.get('/api/resume', authMiddleware, async (req, res) => {
+resumeRouter.get('/', authMiddleware, async (req, res) => {
     try {
         const resume = await Resume.findOne({ userId: req.user.id });
         if (!resume) {
@@ -143,7 +146,7 @@ app.get('/api/resume', authMiddleware, async (req, res) => {
     }
 });
 
-app.post('/api/resume', authMiddleware, async (req, res) => {
+resumeRouter.post('/', authMiddleware, async (req, res) => {
     try {
         const { data, style } = req.body;
         const userId = req.user.id;
@@ -161,7 +164,18 @@ app.post('/api/resume', authMiddleware, async (req, res) => {
 });
 
 
-// --- Start Server ---
-app.listen(PORT, () => {
-    console.log(`Backend server is running on http://localhost:${PORT}`);
-});
+// --- Main API Route Registration ---
+app.use('/api/auth', authRouter);
+app.use('/api/resume', resumeRouter);
+
+
+// --- Start Server (for local development) ---
+// Vercel handles the server listening part automatically in production
+if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+        console.log(`Backend server is running on http://localhost:${PORT}`);
+    });
+}
+
+// Export the Express app for Vercel
+module.exports = app;
