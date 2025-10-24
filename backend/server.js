@@ -169,13 +169,14 @@ app.use('/api/auth', authRouter);
 app.use('/api/resume', resumeRouter);
 
 
-// --- Start Server (for local development) ---
-// Vercel handles the server listening part automatically in production
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, () => {
+
+app.listen(PORT, () => {
+    if (process.env.NODE_ENV !== 'production') {
         console.log(`Backend server is running on http://localhost:${PORT}`);
-    });
-}
+    } else {
+        console.log(`Backend server is running in production on port ${PORT}`);
+    }
+});
 
 // Export the Express app for Vercel
 module.exports = app;
