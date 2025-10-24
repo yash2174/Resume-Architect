@@ -5,11 +5,13 @@ interface AuthResponse {
     user: User;
 }
 
-const API_URL = 'http://localhost:5000/api/auth'; // URL for your running backend server
+const API_BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+const AUTH_API_URL = `${API_BASE_URL}/auth`;
+
 
 export const authService = {
     login: async (email: string, password?: string): Promise<AuthResponse> => {
-        const response = await fetch(`${API_URL}/login`, {
+        const response = await fetch(`${AUTH_API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -24,7 +26,7 @@ export const authService = {
     },
 
     signup: async (email: string, password?: string): Promise<AuthResponse> => {
-        const response = await fetch(`${API_URL}/register`, {
+        const response = await fetch(`${AUTH_API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -39,7 +41,7 @@ export const authService = {
     },
 
     verifyToken: async (token: string): Promise<User> => {
-         const response = await fetch(`${API_URL}/verify`, {
+         const response = await fetch(`${AUTH_API_URL}/verify`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`

@@ -5,11 +5,12 @@ interface ResumeState {
     style: StyleConfig;
 }
 
-const API_URL = 'http://localhost:5000/api/resume'; // URL for your running backend server
+const API_BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+const RESUME_API_URL = `${API_BASE_URL}/resume`;
 
 export const resumeService = {
     getResume: async (token: string): Promise<ResumeState | null> => {
-        const response = await fetch(API_URL, {
+        const response = await fetch(RESUME_API_URL, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -29,7 +30,7 @@ export const resumeService = {
     },
 
     saveResume: async (resumeState: ResumeState, token: string): Promise<ResumeState> => {
-        const response = await fetch(API_URL, {
+        const response = await fetch(RESUME_API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
