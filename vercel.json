@@ -1,12 +1,12 @@
 
 {
   "version": 2,
-  "functions": {
-    "backend/server.js": {
-      "memory": 1024,
-      "maxDuration": 15
+  "builds": [
+    {
+      "src": "backend/server.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
