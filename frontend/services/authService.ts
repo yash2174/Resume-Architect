@@ -5,8 +5,9 @@ interface AuthResponse {
     user: User;
 }
 
-const API_BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const AUTH_API_URL = `${API_BASE_URL}/auth`;
+
 
 
 export const authService = {

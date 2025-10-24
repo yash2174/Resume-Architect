@@ -5,7 +5,8 @@ interface ResumeState {
     style: StyleConfig;
 }
 
-const API_BASE_URL = window.location.hostname.includes('localhost') ? 'http://localhost:5000/api' : '/api';
+// Use environment variable for production; fallback to localhost for dev
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 const RESUME_API_URL = `${API_BASE_URL}/resume`;
 
 export const resumeService = {
