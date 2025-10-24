@@ -6,8 +6,9 @@ interface ResumeState {
 }
 
 // Use environment variable for production; fallback to localhost for dev
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = 'https://resume-architect-3.onrender.com/api';
 const RESUME_API_URL = `${API_BASE_URL}/resume`;
+
 
 export const resumeService = {
     getResume: async (token: string): Promise<ResumeState | null> => {
